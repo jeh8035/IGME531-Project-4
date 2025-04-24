@@ -1,13 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://cuvpclfcxr31r"]
+[gd_scene load_steps=4 format=3 uid="uid://cuvpclfcxr31r"]
 
 [ext_resource type="Script" uid="uid://2f3xvg1bt20h" path="res://spawner.gd" id="1_h2yge"]
 [ext_resource type="Script" uid="uid://dy1dnxh8hs5aq" path="res://addons/freecam_3D/freecam.gd" id="1_ig7tw"]
 
+[sub_resource type="Environment" id="Environment_0xm2m"]
+background_mode = 1
+ambient_light_energy = 0.0
+
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_h2yge")
-chunk_size = 100.0
+chunk_size = 500.0
 chunks_around = 1
+chunks_remove_distance = 2
 
 [node name="Freecam3D" type="Camera3D" parent="."]
 script = ExtResource("1_ig7tw")
 metadata/_custom_type_script = "uid://dy1dnxh8hs5aq"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0xm2m")
