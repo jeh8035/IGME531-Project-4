@@ -1,11 +1,20 @@
-[gd_scene load_steps=5 format=3 uid="uid://bae2knb7m8jik"]
+[gd_scene load_steps=7 format=3 uid="uid://bae2knb7m8jik"]
 
 [ext_resource type="Shader" uid="uid://dcc8yvvmd0d3q" path="res://Orbs/orb.gdshader" id="1_a3bkd"]
 [ext_resource type="Script" uid="uid://baxou826gb2is" path="res://Orbs/orb.gd" id="1_crwj2"]
 
+[sub_resource type="Gradient" id="Gradient_a3bkd"]
+offsets = PackedFloat32Array(0, 0.29771, 0.51145, 0.71374, 1)
+colors = PackedColorArray(1, 0.300051, 0.236805, 1, 1, 1, 1, 1, 1, 0.909804, 0, 1, 1, 0.626042, 0.20499, 1, 0.381019, 0.578721, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_n7n60"]
+gradient = SubResource("Gradient_a3bkd")
+width = 20
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_n7n60"]
 render_priority = 0
 shader = ExtResource("1_a3bkd")
+shader_parameter/gradient = SubResource("GradientTexture1D_n7n60")
 
 [sub_resource type="SphereMesh" id="SphereMesh_crwj2"]
 radial_segments = 8

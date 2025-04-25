@@ -6,12 +6,30 @@
 [sub_resource type="Environment" id="Environment_0xm2m"]
 background_mode = 1
 ambient_light_energy = 0.0
+glow_enabled = true
+glow_levels/1 = 2.07
+glow_levels/3 = 0.0
+glow_levels/5 = 0.0
+glow_intensity = 0.45
+glow_bloom = 1.0
+glow_blend_mode = 0
+glow_hdr_threshold = 0.5
+glow_hdr_scale = 0.98
+glow_hdr_luminance_cap = 49.07
+glow_map_strength = 1.0
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0, 0, 0, 1)
+fog_density = 0.9
+fog_sky_affect = 0.0
+fog_depth_curve = 3.86373
+fog_depth_end = 1000.0
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_h2yge")
 chunk_size = 500.0
-chunks_around = 1
-chunks_remove_distance = 2
+chunks_around = 2
+chunks_remove_distance = 3
 
 [node name="Freecam3D" type="Camera3D" parent="."]
 script = ExtResource("1_ig7tw")

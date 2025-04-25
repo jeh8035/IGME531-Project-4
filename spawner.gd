@@ -35,7 +35,6 @@ func _remove_chunk(chunk_coord: Vector3i) -> void:
 		chunks[chunk_coord].queue_free()
 		chunks.erase(chunk_coord)
 
-
 func _add_chunk(chunk_coord: Vector3i) -> void:
 	if !chunks.has(chunk_coord):
 		var asset : Node3D = chunk_asset.instantiate()

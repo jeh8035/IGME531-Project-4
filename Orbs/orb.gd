@@ -18,10 +18,11 @@ func finish() -> void:
 
 func _ready() -> void:
 	for i : int in count:
+		var size : float = randf_range(0.1, 4.0);
 		data.append_array([
-			1, 0, 0, randf_range(-bounds/2, bounds/2),
-			0, 1, 0, randf_range(-bounds/2, bounds/2),
-			0, 0, 1, randf_range(-bounds/2, bounds/2)
+			size, 0, 0, randf_range(-bounds/2, bounds/2),
+			0, size, 0, randf_range(-bounds/2, bounds/2),
+			0, 0, size, randf_range(-bounds/2, bounds/2)
 		])
 	finish()
 	
