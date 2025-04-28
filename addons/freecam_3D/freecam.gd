@@ -23,6 +23,8 @@ class_name Freecam3D
 ## Container for the chat-like event log.
 @onready var event_log := VBoxContainer.new()
 
+var audio_stream : AudioStreamSynchronized
+
 const MAX_SPEED := 20
 const MIN_SPEED := 0.1
 const ACCELERATION := 0.1
@@ -61,6 +63,7 @@ func _setup_nodes() -> void:
 
 
 func _ready() -> void:
+	audio_stream = $"../AudioStreamPlayer".stream
 	_setup_nodes.call_deferred()
 	_add_keybindings()
 
@@ -84,6 +87,17 @@ func _process(delta: float) -> void:
 		
 		velocity = lerp(velocity, dir * target_speed, ACCELERATION)
 		pivot.position += velocity
+		
+		
+		var target_volume : float
+		if velocity.length() == 0:
+			target_volume = 0
+		else:
+			target_volume = min(velocity.length() / target_speed, 1) * (target_speed/20)
+		audio_stream.set_sync_stream_volume(0, lerp(max(audio_stream.get_sync_stream_volume(0), -60.0), linear_to_db(target_volume), 1 - exp(-0.75 * delta)))
+		
+		audio_stream.set_sync_stream_volume(1, linear_to_db(target_volume))
+		audio_stream.set_sync_stream_volume(2, linear_to_db(1.0 - target_volume))
 
 
 func _input(event: InputEvent) -> void:

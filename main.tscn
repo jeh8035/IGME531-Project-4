@@ -1,7 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://cuvpclfcxr31r"]
+[gd_scene load_steps=8 format=3 uid="uid://cuvpclfcxr31r"]
 
 [ext_resource type="Script" uid="uid://2f3xvg1bt20h" path="res://spawner.gd" id="1_h2yge"]
 [ext_resource type="Script" uid="uid://dy1dnxh8hs5aq" path="res://addons/freecam_3D/freecam.gd" id="1_ig7tw"]
+[ext_resource type="AudioStream" uid="uid://bt7gh6arc45f0" path="res://sound/proj4_1_final.ogg" id="3_1bvp3"]
+[ext_resource type="AudioStream" uid="uid://xjetosamepoq" path="res://sound/proj4_2.ogg" id="4_lquwl"]
+[ext_resource type="AudioStream" uid="uid://c5wwu2gik21af" path="res://sound/proj4_3_final.ogg" id="5_lquwl"]
 
 [sub_resource type="Environment" id="Environment_0xm2m"]
 background_mode = 1
@@ -25,6 +28,15 @@ fog_sky_affect = 0.0
 fog_depth_curve = 3.86373
 fog_depth_end = 2000.0
 
+[sub_resource type="AudioStreamSynchronized" id="AudioStreamSynchronized_7mycd"]
+stream_count = 3
+stream_0/stream = ExtResource("4_lquwl")
+stream_0/volume = -60.0
+stream_1/stream = ExtResource("3_1bvp3")
+stream_1/volume = 0.0
+stream_2/stream = ExtResource("5_lquwl")
+stream_2/volume = 0.0
+
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_h2yge")
 chunk_size = 1000.0
@@ -39,3 +51,8 @@ metadata/_custom_type_script = "uid://dy1dnxh8hs5aq"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_0xm2m")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamSynchronized_7mycd")
+volume_db = -10.0
+autoplay = true
