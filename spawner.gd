@@ -11,13 +11,25 @@ var chunks : Dictionary[Vector3i, Node3D]
 var player_ref : Node3D
 var player_pos : Vector3
 
+var asset_pool : Array[Node3D]
+var asset_pool_index : int = 0
+
+func _ready() -> void:
+	player_ref = $Freecam3D
+	player_pos = player_ref.global_position
+	for i : int in pow(chunks_remove_distance * 2, 3):
+		var asset : Node3D = chunk_asset.instantiate()
+		asset.bounds = chunk_size
+		add_child(asset)
+		asset_pool.append(asset)
+		asset.visible = false
+
 func encode_coordinate(coordinate : Vector3) -> Vector3i:
 	return Vector3i(
 		roundi(coordinate.x / chunk_size),
 		roundi(coordinate.y / chunk_size),
 		roundi(coordinate.z / chunk_size),
 	)
-	
 
 func decode_coordinate(key : Vector3i) -> Vector3:
 	return Vector3(
@@ -26,21 +38,18 @@ func decode_coordinate(key : Vector3i) -> Vector3:
 		(key.z) * chunk_size
 	)
 
-func _ready() -> void:
-	player_ref = $Freecam3D
-	player_pos = player_ref.global_position
-
 func _remove_chunk(chunk_coord: Vector3i) -> void:
 	if chunks.has(chunk_coord):
-		chunks[chunk_coord].queue_free()
+		var asset : Node3D = chunks[chunk_coord]
 		chunks.erase(chunk_coord)
+		asset.hide_mm()
+		asset_pool.append(asset)
 
 func _add_chunk(chunk_coord: Vector3i) -> void:
 	if !chunks.has(chunk_coord):
-		var asset : Node3D = chunk_asset.instantiate()
-		asset.bounds = chunk_size
-		asset.translate(decode_coordinate(chunk_coord))
-		add_child(asset)
+		var asset : Node3D = asset_pool.pop_back()
+		asset.global_position = decode_coordinate(chunk_coord)
+		asset.regenerate_points()
 		chunks[chunk_coord] = asset
 
 func _remove_old_chunks() -> void:

@@ -23,7 +23,7 @@ class_name Freecam3D
 ## Container for the chat-like event log.
 @onready var event_log := VBoxContainer.new()
 
-const MAX_SPEED := 4
+const MAX_SPEED := 20
 const MIN_SPEED := 0.1
 const ACCELERATION := 0.1
 const MOUSE_SENSITIVITY := 0.002
@@ -80,7 +80,7 @@ func _process(delta: float) -> void:
 		if Input.is_action_pressed("__debug_camera_down"): 		dir.y -= 1
 		
 		dir = dir.normalized()
-		dir = dir.rotated(Vector3.UP, pivot.rotation.y)
+		dir = dir.x * pivot.global_basis.x + dir.y * pivot.global_basis.y + dir.z * pivot.global_basis.z  
 		
 		velocity = lerp(velocity, dir * target_speed, ACCELERATION)
 		pivot.position += velocity
@@ -90,9 +90,11 @@ func _input(event: InputEvent) -> void:
 	if movement_active:
 		# Turn around
 		if event is InputEventMouseMotion:
-			pivot.rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
-			rotate_x(-event.relative.y * MOUSE_SENSITIVITY)
-			rotation.x = clamp(rotation.x, -PI/2, PI/2)
+			pivot.rotate(pivot.global_basis.x, -event.relative.y * MOUSE_SENSITIVITY)
+			pivot.rotate(pivot.global_basis.y, -event.relative.x * MOUSE_SENSITIVITY)
+			#pivot.rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
+			#rotate_x(-event.relative.y * MOUSE_SENSITIVITY)
+			#rotation.x = fmod(rotation.x + PI/2, PI) - PI/2 # clamp(rotation.x, -PI/2, PI/2)
 		
 		var speed_up = func():
 			target_speed = clamp(target_speed + 0.15, MIN_SPEED, MAX_SPEED)
