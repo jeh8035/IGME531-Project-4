@@ -4,8 +4,8 @@
 [ext_resource type="Script" uid="uid://baxou826gb2is" path="res://Orbs/orb.gd" id="1_crwj2"]
 
 [sub_resource type="Gradient" id="Gradient_a3bkd"]
-offsets = PackedFloat32Array(0, 0.29771, 0.51145, 0.71374, 1)
-colors = PackedColorArray(1, 0.300051, 0.236805, 1, 1, 1, 1, 1, 1, 0.909804, 0, 1, 1, 0.626042, 0.20499, 1, 0.381019, 0.578721, 1, 1)
+offsets = PackedFloat32Array(0, 0.242798, 0.427984, 0.617284, 0.744856, 0.872428, 1)
+colors = PackedColorArray(1, 0.8, 0.435294, 1, 1, 0.823529, 0.631373, 1, 1, 0.956863, 0.917647, 1, 0.972549, 0.968627, 1, 1, 0.792157, 0.843137, 1, 1, 0.666667, 0.74902, 1, 1, 0.607843, 0.690196, 1, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_n7n60"]
 gradient = SubResource("Gradient_a3bkd")

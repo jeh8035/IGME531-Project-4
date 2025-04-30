@@ -75,7 +75,7 @@ func _ready() -> void:
 	movement_active = true
 
 
-var rand_timer : float = 0.0
+var rand_timer : float = 15
 
 func _process(delta: float) -> void:
 	
@@ -118,7 +118,7 @@ func _process(delta: float) -> void:
 				rand_timer = randf_range(5.0, 30.0)
 		
 		target_volume = max(remap(target_volume, 0.5, 1.0, 0.0, 1.0), 0.0)
-		audio_stream_meta.set_sync_stream_volume(1, lerp(max(audio_stream_meta.get_sync_stream_volume(1), -60.0), linear_to_db(target_volume), 1 - exp(-0.50 * delta)))
+		audio_stream_meta.set_sync_stream_volume(1, lerp(max(audio_stream_meta.get_sync_stream_volume(1), -60.0), max(linear_to_db(target_volume), -60.0), 1 - exp(-0.50 * delta)))
 		#audio_stream.set_sync_stream_volume(2, linear_to_db(1.0 - target_volume))
 
 

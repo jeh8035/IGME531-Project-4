@@ -32,8 +32,8 @@ fog_mode = 1
 fog_light_color = Color(0, 0, 0, 1)
 fog_density = 1.0
 fog_sky_affect = 0.0
-fog_depth_curve = 3.86373
-fog_depth_end = 2000.0
+fog_depth_curve = 0.406125
+fog_depth_end = 4000.0
 
 [sub_resource type="AudioStreamInteractive" id="AudioStreamInteractive_4c57u"]
 clip_count = 4
@@ -84,8 +84,8 @@ stream_4/stream = ExtResource("12_2cqfq")
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_h2yge")
 chunk_size = 1000.0
-chunks_around = 2
-chunks_remove_distance = 3
+chunks_around = 3
+chunks_remove_distance = 4
 
 [node name="Freecam3D" type="Camera3D" parent="."]
 script = ExtResource("1_ig7tw")
