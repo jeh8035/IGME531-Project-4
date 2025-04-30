@@ -26,6 +26,7 @@ class_name Freecam3D
 var audio_stream_meta : AudioStreamSynchronized
 var audio_stream_calm : AudioStreamInteractive
 var audio_stream_action : AudioStreamRandomizer
+var audio_player_bright : AudioStreamPlayer
 
 const MAX_SPEED := 20
 const MIN_SPEED := 0.1
@@ -68,10 +69,13 @@ func _ready() -> void:
 	audio_stream_meta = $"../AudioStreamPlayer".stream
 	audio_stream_calm = audio_stream_meta.get_sync_stream(0) 
 	audio_stream_action = audio_stream_meta.get_sync_stream(1)
+	audio_player_bright = $"../AudioStreamPlayer2"
 	_setup_nodes.call_deferred()
 	_add_keybindings()
 	movement_active = true
 
+
+var rand_timer : float = 0.0
 
 func _process(delta: float) -> void:
 	
@@ -105,6 +109,15 @@ func _process(delta: float) -> void:
 			target_volume = min(velocity.length() / target_speed, 1) * (target_speed/20)
 		#audio_stream.set_sync_stream_volume(0, lerp(max(audio_stream.get_sync_stream_volume(0), -60.0), linear_to_db(target_volume), 1 - exp(-0.75 * delta)))
 		#
+		
+		rand_timer -= delta
+		if target_volume > 0.5 and !audio_player_bright.playing:
+			rand_timer -= delta
+			if rand_timer <= 0.0:
+				audio_player_bright.play()
+				rand_timer = randf_range(5.0, 30.0)
+		
+		target_volume = max(remap(target_volume, 0.5, 1.0, 0.0, 1.0), 0.0)
 		audio_stream_meta.set_sync_stream_volume(1, lerp(max(audio_stream_meta.get_sync_stream_volume(1), -60.0), linear_to_db(target_volume), 1 - exp(-0.50 * delta)))
 		#audio_stream.set_sync_stream_volume(2, linear_to_db(1.0 - target_volume))
 
