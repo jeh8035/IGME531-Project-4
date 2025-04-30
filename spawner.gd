@@ -49,7 +49,7 @@ func _add_chunk(chunk_coord: Vector3i) -> void:
 	if !chunks.has(chunk_coord):
 		var asset : Node3D = asset_pool.pop_back()
 		asset.global_position = decode_coordinate(chunk_coord)
-		asset.regenerate_points()
+		asset.regenerate_points_threaded()
 		chunks[chunk_coord] = asset
 
 func _remove_old_chunks() -> void:

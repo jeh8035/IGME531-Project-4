@@ -25,4 +25,4 @@ material_override = SubResource("ShaderMaterial_n7n60")
 script = ExtResource("1_crwj2")
 mesh = SubResource("SphereMesh_crwj2")
 bounds = 100.0
-count = 1000
+count = 4000

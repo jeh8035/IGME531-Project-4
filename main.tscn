@@ -20,12 +20,10 @@ glow_enabled = true
 glow_levels/1 = 2.07
 glow_levels/3 = 0.0
 glow_levels/5 = 0.0
-glow_intensity = 0.45
+glow_intensity = 0.38
+glow_strength = 0.63
 glow_bloom = 1.0
 glow_blend_mode = 0
-glow_hdr_threshold = 0.5
-glow_hdr_scale = 0.98
-glow_hdr_luminance_cap = 49.07
 glow_map_strength = 1.0
 fog_enabled = true
 fog_mode = 1
@@ -83,7 +81,7 @@ stream_4/stream = ExtResource("12_2cqfq")
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_h2yge")
-chunk_size = 1000.0
+chunk_size = 2000.0
 chunks_around = 3
 chunks_remove_distance = 4
 
