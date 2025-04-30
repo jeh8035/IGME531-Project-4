@@ -46,7 +46,6 @@ chunks_remove_distance = 3
 [node name="Freecam3D" type="Camera3D" parent="."]
 script = ExtResource("1_ig7tw")
 overlay_text = false
-target_speed = 1.0
 metadata/_custom_type_script = "uid://dy1dnxh8hs5aq"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]

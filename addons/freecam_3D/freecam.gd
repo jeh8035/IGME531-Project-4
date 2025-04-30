@@ -27,7 +27,7 @@ var audio_stream : AudioStreamSynchronized
 
 const MAX_SPEED := 20
 const MIN_SPEED := 0.1
-const ACCELERATION := 0.1
+const ACCELERATION := 0.5
 const MOUSE_SENSITIVITY := 0.002
 
 ## Whether or not the camera can move.
@@ -38,7 +38,7 @@ var movement_active := false:
 		display_message("[Movement ON]" if movement_active else "[Movement OFF]")
 
 ## The current maximum speed. Lower or higher it by scrolling the mouse wheel.
-@export var target_speed := MIN_SPEED
+@export var target_speed := 20
 ## Movement velocity.
 var velocity := Vector3.ZERO
 
@@ -66,6 +66,7 @@ func _ready() -> void:
 	audio_stream = $"../AudioStreamPlayer".stream
 	_setup_nodes.call_deferred()
 	_add_keybindings()
+	movement_active = true
 
 
 func _process(delta: float) -> void:
@@ -85,7 +86,7 @@ func _process(delta: float) -> void:
 		dir = dir.normalized()
 		dir = dir.x * pivot.global_basis.x + dir.y * pivot.global_basis.y + dir.z * pivot.global_basis.z  
 		
-		velocity = lerp(velocity, dir * target_speed, ACCELERATION)
+		velocity = lerp(velocity, dir * target_speed, 1 - exp(-ACCELERATION * delta))
 		pivot.position += velocity
 		
 		
@@ -119,12 +120,12 @@ func _input(event: InputEvent) -> void:
 			display_message("[Slow down] " + str(target_speed))
 		
 		# Speed up and down with the mouse wheel
-		if event is InputEventMouseButton:
-			if event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
-				slow_down.call() if invert_speed_controls else speed_up.call()
-				
-			if event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
-				speed_up.call() if invert_speed_controls else slow_down.call()
+		#if event is InputEventMouseButton:
+			#if event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
+				#slow_down.call() if invert_speed_controls else speed_up.call()
+				#
+			#if event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
+				#speed_up.call() if invert_speed_controls else slow_down.call()
 
 
 ## Pushes new message label into "chat" and removes the old ones if necessary
