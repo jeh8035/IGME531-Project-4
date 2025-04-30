@@ -1,10 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://cuvpclfcxr31r"]
+[gd_scene load_steps=12 format=3 uid="uid://cuvpclfcxr31r"]
 
 [ext_resource type="Script" uid="uid://2f3xvg1bt20h" path="res://spawner.gd" id="1_h2yge"]
 [ext_resource type="Script" uid="uid://dy1dnxh8hs5aq" path="res://addons/freecam_3D/freecam.gd" id="1_ig7tw"]
-[ext_resource type="AudioStream" uid="uid://bt7gh6arc45f0" path="res://sound/proj4_1_final.ogg" id="3_1bvp3"]
-[ext_resource type="AudioStream" uid="uid://xjetosamepoq" path="res://sound/proj4_2.ogg" id="4_lquwl"]
-[ext_resource type="AudioStream" uid="uid://c5wwu2gik21af" path="res://sound/proj4_3_final.ogg" id="5_lquwl"]
+[ext_resource type="AudioStream" uid="uid://chj7y77kwq41a" path="res://sound/calm/calm_1.ogg" id="3_7mycd"]
+[ext_resource type="AudioStream" uid="uid://yo1k7f3jjjn6" path="res://sound/calm/calm_2.ogg" id="4_272bh"]
+[ext_resource type="AudioStream" uid="uid://cgod80bv75paf" path="res://sound/calm/calm_3.ogg" id="5_5vw27"]
+[ext_resource type="AudioStream" uid="uid://dffirglxan16k" path="res://sound/calm/calm_4.ogg" id="6_272bh"]
+[ext_resource type="AudioStream" uid="uid://c7uywbnlf20ou" path="res://sound/exciting/exciting_1.ogg" id="7_272bh"]
 
 [sub_resource type="Environment" id="Environment_0xm2m"]
 background_mode = 1
@@ -28,14 +30,43 @@ fog_sky_affect = 0.0
 fog_depth_curve = 3.86373
 fog_depth_end = 2000.0
 
-[sub_resource type="AudioStreamSynchronized" id="AudioStreamSynchronized_7mycd"]
-stream_count = 3
-stream_0/stream = ExtResource("4_lquwl")
-stream_0/volume = -60.0
-stream_1/stream = ExtResource("3_1bvp3")
-stream_1/volume = 0.0
-stream_2/stream = ExtResource("5_lquwl")
-stream_2/volume = 0.0
+[sub_resource type="AudioStreamInteractive" id="AudioStreamInteractive_4c57u"]
+clip_count = 4
+clip_0/name = &"Calm 1"
+clip_0/stream = ExtResource("3_7mycd")
+clip_0/auto_advance = 1
+clip_0/next_clip = 1
+clip_1/name = &"Calm 2"
+clip_1/stream = ExtResource("4_272bh")
+clip_1/auto_advance = 1
+clip_1/next_clip = 2
+clip_2/name = &"Calm 3"
+clip_2/stream = ExtResource("5_5vw27")
+clip_2/auto_advance = 1
+clip_2/next_clip = 2
+clip_3/name = &"Calm 4"
+clip_3/stream = ExtResource("6_272bh")
+clip_3/auto_advance = 1
+clip_3/next_clip = 0
+_transitions = {
+Vector2i(-1, -1): {
+"fade_beats": 4.0,
+"fade_mode": 3,
+"from_time": 0,
+"to_time": 1
+}
+}
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_272bh"]
+streams_count = 1
+stream_0/stream = ExtResource("7_272bh")
+
+[sub_resource type="AudioStreamSynchronized" id="AudioStreamSynchronized_272bh"]
+stream_count = 2
+stream_0/stream = SubResource("AudioStreamInteractive_4c57u")
+stream_0/volume = 0.0
+stream_1/stream = SubResource("AudioStreamRandomizer_272bh")
+stream_1/volume = -60.0
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_h2yge")
@@ -52,6 +83,11 @@ metadata/_custom_type_script = "uid://dy1dnxh8hs5aq"
 environment = SubResource("Environment_0xm2m")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = SubResource("AudioStreamSynchronized_7mycd")
+stream = SubResource("AudioStreamSynchronized_272bh")
+volume_db = -10.0
+autoplay = true
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamInteractive_4c57u")
 volume_db = -10.0
 autoplay = true

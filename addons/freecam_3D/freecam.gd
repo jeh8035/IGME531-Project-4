@@ -23,7 +23,9 @@ class_name Freecam3D
 ## Container for the chat-like event log.
 @onready var event_log := VBoxContainer.new()
 
-var audio_stream : AudioStreamSynchronized
+var audio_stream_meta : AudioStreamSynchronized
+var audio_stream_calm : AudioStreamInteractive
+var audio_stream_action : AudioStreamRandomizer
 
 const MAX_SPEED := 20
 const MIN_SPEED := 0.1
@@ -63,7 +65,9 @@ func _setup_nodes() -> void:
 
 
 func _ready() -> void:
-	audio_stream = $"../AudioStreamPlayer".stream
+	audio_stream_meta = $"../AudioStreamPlayer".stream
+	audio_stream_calm = audio_stream_meta.get_sync_stream(0) 
+	audio_stream_action = audio_stream_meta.get_sync_stream(1)
 	_setup_nodes.call_deferred()
 	_add_keybindings()
 	movement_active = true
@@ -89,16 +93,20 @@ func _process(delta: float) -> void:
 		velocity = lerp(velocity, dir * target_speed, 1 - exp(-ACCELERATION * delta))
 		pivot.position += velocity
 		
+		audio_stream_calm.set_clip_auto_advance_next_clip(0, [1, 2, 3].pick_random())
+		audio_stream_calm.set_clip_auto_advance_next_clip(1, [0, 2, 3].pick_random())
+		audio_stream_calm.set_clip_auto_advance_next_clip(2, [0, 1, 3].pick_random())
+		audio_stream_calm.set_clip_auto_advance_next_clip(3, [0, 1, 2].pick_random())
 		
 		var target_volume : float
 		if velocity.length() == 0:
 			target_volume = 0
 		else:
 			target_volume = min(velocity.length() / target_speed, 1) * (target_speed/20)
-		audio_stream.set_sync_stream_volume(0, lerp(max(audio_stream.get_sync_stream_volume(0), -60.0), linear_to_db(target_volume), 1 - exp(-0.75 * delta)))
-		
-		audio_stream.set_sync_stream_volume(1, linear_to_db(target_volume))
-		audio_stream.set_sync_stream_volume(2, linear_to_db(1.0 - target_volume))
+		#audio_stream.set_sync_stream_volume(0, lerp(max(audio_stream.get_sync_stream_volume(0), -60.0), linear_to_db(target_volume), 1 - exp(-0.75 * delta)))
+		#
+		audio_stream_meta.set_sync_stream_volume(1, lerp(max(audio_stream_meta.get_sync_stream_volume(1), -60.0), linear_to_db(target_volume), 1 - exp(-0.50 * delta)))
+		#audio_stream.set_sync_stream_volume(2, linear_to_db(1.0 - target_volume))
 
 
 func _input(event: InputEvent) -> void:
