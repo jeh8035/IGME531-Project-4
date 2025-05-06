@@ -18,14 +18,12 @@ shader_parameter/gradient = SubResource("GradientTexture1D_n7n60")
 shader_parameter/voronoi_affect = 1.0
 shader_parameter/voronoi_scale = 2000.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_crwj2"]
-radial_segments = 4
-rings = 2
+[sub_resource type="QuadMesh" id="QuadMesh_a3bkd"]
 
 [node name="Orb" type="MultiMeshInstance3D"]
 material_override = SubResource("ShaderMaterial_n7n60")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("1_crwj2")
-mesh = SubResource("SphereMesh_crwj2")
+mesh = SubResource("QuadMesh_a3bkd")
 count = 2000

@@ -94,8 +94,20 @@ void vertex() {
 		MODEL_MATRIX[3][2] * 9089210.121213
 	);
 	
+	vec4 modified_model_mat = MODEL_MATRIX[3];
+	
+	// Offset position
 	vec3 voronoi_result = voronoi_affect * (voronoi_scale) * voronoise3D(MODEL_MATRIX[3].xyz * (1.0/voronoi_scale));
-	VERTEX += voronoi_result;
+	modified_model_mat += vec4(voronoi_result, 0.0);
+	
+	// Billboard
+    mat4 modified_model_view = VIEW_MATRIX * mat4(
+        INV_VIEW_MATRIX[0],
+        INV_VIEW_MATRIX[1],
+        INV_VIEW_MATRIX[2],
+        modified_model_mat
+    );
+    MODELVIEW_MATRIX = modified_model_view;
 }
 
 void fragment() {
@@ -103,6 +115,9 @@ void fragment() {
 	
 	EMISSION = color.xyz * ((rand_val2 + 0.5) * 2.0);
 	ALBEDO = color.xyz;
+	
+	ALPHA_SCISSOR_THRESHOLD = 0.5;
+	ALPHA = float(length(UV - vec2(0.5)) < 0.5);
 	
 	//EMISSION = MODEL_MATRIX[3].xyz;
 }
