@@ -1,10 +1,9 @@
 extends MultiMeshInstance3D
 
 @export var mesh : Mesh
-
-@export var bounds : float
-
 @export var count : int
+
+var bounds : float
 
 var data : PackedFloat32Array
 
@@ -21,6 +20,13 @@ func finish() -> void:
 	multimesh.instance_count = floori(data.size() / 12.0)
 	multimesh.visible_instance_count = multimesh.instance_count
 	multimesh.buffer = data
+
+func set_bounds(new_bounds : float) -> void:
+	bounds = new_bounds
+	material_override.set_shader_parameter("voronoi_scale", bounds * (1.0/3.0))
+	
+	var larger_bounds := bounds + bounds * (1.0/3.0)
+	custom_aabb = AABB(Vector3(-larger_bounds/2.0, -larger_bounds/2.0 ,-larger_bounds/2.0), Vector3(larger_bounds, larger_bounds, larger_bounds))
 
 func regenerate_points_threaded() -> void:
 	if thread:

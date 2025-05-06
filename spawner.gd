@@ -19,7 +19,7 @@ func _ready() -> void:
 	player_pos = player_ref.global_position
 	for i : int in pow(chunks_remove_distance * 2, 3):
 		var asset : Node3D = chunk_asset.instantiate()
-		asset.bounds = chunk_size
+		asset.set_bounds(chunk_size)
 		add_child(asset)
 		asset_pool.append(asset)
 		asset.visible = false
