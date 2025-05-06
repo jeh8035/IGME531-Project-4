@@ -2,6 +2,8 @@ shader_type spatial;
 
 uniform sampler2D gradient;
 
+uniform float voronoi_affect : hint_range(0.0, 1.0, 0.1) = 0.0;
+uniform float voronoi_scale = 2.0;
 
 varying float rand_val;
 varying float rand_val2;
@@ -17,45 +19,67 @@ float hash1(float p)
 }
 
 //https://www.shadertoy.com/view/7tySzc
-//float hash3(vec3 p) { // replace this by something better
-  //p  = fract( p*0.2183099+.1);
-  //p *= 17.0;
-  //return fract( p.x*p.y*p.z*(p.x+p.y+p.z) );
-//}
-//
-//vec3 distanceToCenter( vec3 c0, vec3 ic) {
-  //vec3 fc = c0 - ic;
-  //vec3 center = vec3(hash3(ic.xyz), hash3(ic.yxz * 153.), hash3(ic.zxy));
-  //vec3 delta = center - fc;
-  //float r = dot( delta, delta );
-  //return delta;
-//}
-//
-//vec3 voronoise3D(vec3 c) {
-  //float r = 10.;
-  //
-  //vec3 dir;
-  //
-  //vec3 ic = floor(c);
-  //for( float x=-1.0; x<=1.0; x+=1.0 ) {
-      //for( float y=-1.0; y<=1.0; y+=1.0 ) {
-        //for( float z=-1.0; z<=1.0; z+=1.0 ) {
-          //
-            //vec3 ic2 = ic + vec3(x,y,z);
-            //vec3 fc = c - ic2;
-            //vec3 center = vec3(hash3(ic2.xyz), hash3(ic2.yxz * 153.), hash3(ic2.zxy));
-            //vec3 delta = center - fc;
-            //float r0 = dot( delta, delta );
-          //
-          //if (r > r0) dir = delta;
-          //
-          //r = min( r, r0 );
-         //}
-      //}
-  //}
-  //return dir;
-  ////return clamp( 1.0 - pow(1. * r, 0.5), 0., 1.0);
-//}
+float hash3(vec3 p) { // replace this by something better
+  p  = fract( p*0.2183099+.1);
+  p *= 17.0;
+  return fract( p.x*p.y*p.z*(p.x+p.y+p.z) );
+}
+
+
+vec3 hash3to3(vec3 p) { // replace this by something better
+  p  = fract( p*0.2183099+.1);
+  p *= 17.0;
+  return vec3(fract(p.x * p.y + p.y),fract(p.y + p.z * p.x),fract(p.z * p.x + p.x));
+}
+
+// https://github.com/ronja-tutorials/ShaderTutorials/blob/master/Assets/028_Voronoi_Noise/voronoi_noise_scrolling.shader
+vec3 voronoise3D(vec3 value) {
+	vec3 baseCell = floor(value);
+
+    //first pass to find the closest cell
+    float minDistToCell = 10.0;
+    vec3 toClosestCell;
+    vec3 closestCell;
+    for(int x1=-1; x1<=1; x1++){
+        for(int y1=-1; y1<=1; y1++){
+            for(int z1=-1; z1<=1; z1++){
+                vec3 cell = baseCell + vec3(float(x1), float(y1), float(z1));
+                vec3 cellPosition = cell + hash3to3(cell);
+                vec3 toCell = cellPosition - value;
+                float distToCell = length(toCell);
+                if(distToCell < minDistToCell){
+                    minDistToCell = distToCell;
+                    closestCell = cell;
+                    toClosestCell = toCell;
+                }
+            }
+        }
+    }
+
+    //second pass to find the distance to the closest edge
+    float minEdgeDistance = 10.0;
+    for(int x2=-1; x2<=1; x2++){
+        for(int y2=-1; y2<=1; y2++){
+            for(int z2=-1; z2<=1; z2++){
+                vec3 cell = baseCell + vec3(float(x2), float(y2), float(z2));
+                vec3 cellPosition = cell + hash3to3(cell);
+                vec3 toCell = cellPosition - value;
+
+                vec3 diffToClosestCell = abs(closestCell - cell);
+                bool isClosestCell = diffToClosestCell.x + diffToClosestCell.y + diffToClosestCell.z < 0.1;
+                if(!isClosestCell){
+                    vec3 toCenter = (toClosestCell + toCell) * 0.5;
+                    vec3 cellDifference = normalize(toCell - toClosestCell);
+                    float edgeDistance = dot(toCenter, cellDifference);
+                    minEdgeDistance = min(minEdgeDistance, edgeDistance);
+                }
+            }
+        }
+    }
+
+    float random = hash3(closestCell);
+    return -normalize(toClosestCell) * minEdgeDistance;//vec3(minDistToCell, random, minEdgeDistance);
+}
 
 void vertex() {
 	rand_val = hash1(
@@ -69,6 +93,9 @@ void vertex() {
 		MODEL_MATRIX[3][1] * 2018251.2 +
 		MODEL_MATRIX[3][2] * 9089210.121213
 	);
+	
+	vec3 voronoi_result = voronoi_affect * (voronoi_scale) * voronoise3D(MODEL_MATRIX[3].xyz * (1.0/voronoi_scale));
+	VERTEX += voronoi_result;
 }
 
 void fragment() {
@@ -76,4 +103,6 @@ void fragment() {
 	
 	EMISSION = color.xyz * ((rand_val2 + 0.5) * 2.0);
 	ALBEDO = color.xyz;
+	
+	//EMISSION = MODEL_MATRIX[3].xyz;
 }
