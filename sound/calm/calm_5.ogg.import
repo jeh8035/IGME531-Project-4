@@ -15,5 +15,5 @@ dest_files=["res://.godot/imported/calm_5.ogg-c40129b32df60903d0a1c13ab9b62383.o
 loop=false
 loop_offset=0.0
 bpm=60.0
-beat_count=0
+beat_count=12
 bar_beats=4

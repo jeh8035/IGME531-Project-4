@@ -45,6 +45,7 @@ var movement_active := false:
 ## Movement velocity.
 var velocity := Vector3.ZERO
 
+var _is_ready : bool = false
 
 ## Sets up pivot and UI overlay elements.
 func _setup_nodes() -> void:
@@ -63,6 +64,7 @@ func _setup_nodes() -> void:
 	
 	screen_overlay.add_child(event_log)
 	screen_overlay.visible = overlay_text
+	_is_ready = true
 
 
 func _ready() -> void:
@@ -97,10 +99,12 @@ func _process(delta: float) -> void:
 		velocity = lerp(velocity, dir * target_speed, 1 - exp(-ACCELERATION * delta))
 		pivot.position += velocity
 		
-		audio_stream_calm.set_clip_auto_advance_next_clip(0, [1, 2, 3].pick_random())
-		audio_stream_calm.set_clip_auto_advance_next_clip(1, [0, 2, 3].pick_random())
-		audio_stream_calm.set_clip_auto_advance_next_clip(2, [0, 1, 3].pick_random())
-		audio_stream_calm.set_clip_auto_advance_next_clip(3, [0, 1, 2].pick_random())
+		audio_stream_calm.set_clip_auto_advance_next_clip(0, [1, 2, 3, 4, 5].pick_random())
+		audio_stream_calm.set_clip_auto_advance_next_clip(1, [0, 2, 3, 4, 5].pick_random())
+		audio_stream_calm.set_clip_auto_advance_next_clip(2, [0, 1, 3, 4, 5].pick_random())
+		audio_stream_calm.set_clip_auto_advance_next_clip(3, [0, 1, 2, 4, 5].pick_random())
+		audio_stream_calm.set_clip_auto_advance_next_clip(4, [0, 1, 2, 3, 5].pick_random())
+		audio_stream_calm.set_clip_auto_advance_next_clip(5, [0, 1, 2, 3, 4].pick_random())
 		
 		var target_volume : float
 		if velocity.length() == 0:
@@ -126,8 +130,9 @@ func _input(event: InputEvent) -> void:
 	if movement_active:
 		# Turn around
 		if event is InputEventMouseMotion:
-			pivot.rotate(pivot.global_basis.x, -event.relative.y * MOUSE_SENSITIVITY)
-			pivot.rotate(pivot.global_basis.y, -event.relative.x * MOUSE_SENSITIVITY)
+			if _is_ready:
+				pivot.rotate(pivot.global_basis.x, -event.relative.y * MOUSE_SENSITIVITY)
+				pivot.rotate(pivot.global_basis.y, -event.relative.x * MOUSE_SENSITIVITY)
 			#pivot.rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
 			#rotate_x(-event.relative.y * MOUSE_SENSITIVITY)
 			#rotation.x = fmod(rotation.x + PI/2, PI) - PI/2 # clamp(rotation.x, -PI/2, PI/2)

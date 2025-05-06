@@ -58,19 +58,19 @@ func _remove_old_chunks() -> void:
 			for z in range(-chunks_remove_distance, chunks_remove_distance + 1):
 				var chunk_coord : Vector3i = encode_coordinate(player_pos) + Vector3i(x,y,z)
 				if chunks.has(chunk_coord):
-					call_deferred("_remove_chunk", chunk_coord)
+					_remove_chunk.call_deferred(chunk_coord)
 	for x in range(-chunks_remove_distance, chunks_remove_distance + 1):
 		for y in [-chunks_remove_distance, chunks_remove_distance]:
 			for z in range(-chunks_remove_distance, chunks_remove_distance + 1):
 				var chunk_coord : Vector3i = encode_coordinate(player_pos) + Vector3i(x,y,z)
 				if chunks.has(chunk_coord):
-					call_deferred("_remove_chunk", chunk_coord)
+					_remove_chunk.call_deferred(chunk_coord)
 	for x in range(-chunks_remove_distance, chunks_remove_distance + 1):
 		for y in range(-chunks_remove_distance, chunks_remove_distance + 1):
 			for z in [-chunks_remove_distance, chunks_remove_distance]:
 				var chunk_coord : Vector3i = encode_coordinate(player_pos) + Vector3i(x,y,z)
 				if chunks.has(chunk_coord):
-					call_deferred("_remove_chunk", chunk_coord)
+					_remove_chunk.call_deferred(chunk_coord)
 
 func _add_chunks() -> void:
 	for x in range(-chunks_around, chunks_around + 1):
@@ -78,7 +78,7 @@ func _add_chunks() -> void:
 			for z in range(-chunks_around, chunks_around + 1):
 				var chunk_coord := encode_coordinate(player_pos) + Vector3i(x,y,z)
 				if !chunks.has(chunk_coord):
-					call_deferred("_add_chunk", chunk_coord)
+					_add_chunk.call_deferred(chunk_coord)
 
 
 var tick_count : int = 0
