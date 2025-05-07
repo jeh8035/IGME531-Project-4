@@ -6,9 +6,11 @@ var chunk_asset := preload("res://Orbs/orb.tscn")
 @export var chunks_around : int
 @export var chunks_remove_distance : int
 
+@export var spawn_mesh : Mesh
+
 var chunks : Dictionary[Vector3i, Node3D]
 
-var player_ref : Node3D
+var player_ref : Freecam3D
 var player_pos : Vector3
 
 var asset_pool : Array[Node3D]
@@ -17,8 +19,12 @@ var asset_pool_index : int = 0
 func _ready() -> void:
 	player_ref = $Freecam3D
 	player_pos = player_ref.global_position
+	
+	spawn_mesh.surface_get_material(0).set_shader_parameter("voronoi_scale", chunk_size * (1.0/3.0))
+	
 	for i : int in pow(chunks_remove_distance * 2, 3):
 		var asset : Node3D = chunk_asset.instantiate()
+		asset.mesh = spawn_mesh
 		asset.set_bounds(chunk_size)
 		add_child(asset)
 		asset_pool.append(asset)
@@ -90,6 +96,8 @@ var thread_create : Thread
 
 func _physics_process(_delta: float) -> void:
 	player_pos = player_ref.global_position
+	
+	spawn_mesh.surface_get_material(0).set_shader_parameter("warp_stretch", pow(player_ref.velocity.length() / player_ref.MAX_SPEED, 5.0) * 0.25)
 	
 	if tick_count % frame_interval_destroy == 0:
 		if thread_destroy:

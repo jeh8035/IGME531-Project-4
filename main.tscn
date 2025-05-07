@@ -1,7 +1,8 @@
-[gd_scene load_steps=20 format=3 uid="uid://cuvpclfcxr31r"]
+[gd_scene load_steps=21 format=3 uid="uid://cuvpclfcxr31r"]
 
 [ext_resource type="Script" uid="uid://2f3xvg1bt20h" path="res://spawner.gd" id="1_h2yge"]
 [ext_resource type="Script" uid="uid://dy1dnxh8hs5aq" path="res://addons/freecam_3D/freecam.gd" id="1_ig7tw"]
+[ext_resource type="QuadMesh" uid="uid://cq0sneo2q1hfh" path="res://Orbs/orb_mesh.tres" id="2_vivmo"]
 [ext_resource type="AudioStream" uid="uid://chj7y77kwq41a" path="res://sound/calm/calm_1.ogg" id="3_7mycd"]
 [ext_resource type="AudioStream" uid="uid://yo1k7f3jjjn6" path="res://sound/calm/calm_2.ogg" id="4_272bh"]
 [ext_resource type="AudioStream" uid="uid://cgod80bv75paf" path="res://sound/calm/calm_3.ogg" id="5_5vw27"]
@@ -94,6 +95,7 @@ script = ExtResource("1_h2yge")
 chunk_size = 2000.0
 chunks_around = 3
 chunks_remove_distance = 4
+spawn_mesh = ExtResource("2_vivmo")
 
 [node name="Freecam3D" type="Camera3D" parent="."]
 script = ExtResource("1_ig7tw")

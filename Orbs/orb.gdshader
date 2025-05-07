@@ -1,9 +1,13 @@
 shader_type spatial;
+render_mode cull_disabled;
+
 
 uniform sampler2D gradient;
 
 uniform float voronoi_affect : hint_range(0.0, 1.0, 0.1) = 0.0;
 uniform float voronoi_scale = 2.0;
+
+uniform float warp_stretch = 0.0;
 
 varying float rand_val;
 varying float rand_val2;
@@ -77,7 +81,6 @@ vec3 voronoise3D(vec3 value) {
         }
     }
 
-    float random = hash3(closestCell);
     return -normalize(toClosestCell) * minEdgeDistance;//vec3(minDistToCell, random, minEdgeDistance);
 }
 
@@ -107,6 +110,29 @@ void vertex() {
         INV_VIEW_MATRIX[2],
         modified_model_mat
     );
+	
+	// "Hyperspace" effect
+	vec4 screen_pos = VIEW_MATRIX * modified_model_mat;
+	float screen_dist = length(screen_pos.xy);
+	
+	float theta = atan(screen_pos.x, screen_pos.y) + PI/2.0;
+	
+	mat4 modified_rot = mat4(
+		vec4(cos(theta), -sin(theta), 0.0, 0.0),
+		vec4(sin(theta), cos(theta), 0.0, 0.0),
+		vec4(0.0, 0.0, 1.0, 0.0),
+		vec4(0.0, 0.0, 0.0, 1.0)
+	);
+	
+	mat4 modified_scale = mat4(
+		vec4(1.0 + screen_dist * warp_stretch, 0.0, 0.0, 0.0),
+		vec4(0.0, 1.0, 0.0, 0.0),
+		vec4(0.0, 0.0, 1.0, 0.0),
+		vec4(0.0, 0.0, 0.0, 1.0)
+	);
+	
+	modified_model_view = modified_model_view * modified_rot * modified_scale;
+	
     MODELVIEW_MATRIX = modified_model_view;
 }
 

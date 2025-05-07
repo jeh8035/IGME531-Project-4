@@ -1,0 +1,22 @@
+[gd_resource type="QuadMesh" load_steps=5 format=3 uid="uid://cq0sneo2q1hfh"]
+
+[ext_resource type="Shader" uid="uid://dcc8yvvmd0d3q" path="res://Orbs/orb.gdshader" id="1_oqaic"]
+
+[sub_resource type="Gradient" id="Gradient_a3bkd"]
+offsets = PackedFloat32Array(0, 0.242798, 0.427984, 0.617284, 0.744856, 0.872428, 1)
+colors = PackedColorArray(1, 0.8, 0.435294, 1, 1, 0.823529, 0.631373, 1, 1, 0.956863, 0.917647, 1, 0.972549, 0.968627, 1, 1, 0.792157, 0.843137, 1, 1, 0.666667, 0.74902, 1, 1, 0.607843, 0.690196, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_n7n60"]
+gradient = SubResource("Gradient_a3bkd")
+width = 20
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n7n60"]
+render_priority = 0
+shader = ExtResource("1_oqaic")
+shader_parameter/gradient = SubResource("GradientTexture1D_n7n60")
+shader_parameter/voronoi_affect = 1.0
+shader_parameter/voronoi_scale = 2000.0
+shader_parameter/warp_stretch = 0.05
+
+[resource]
+material = SubResource("ShaderMaterial_n7n60")

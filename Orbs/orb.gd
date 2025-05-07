@@ -23,7 +23,6 @@ func finish() -> void:
 
 func set_bounds(new_bounds : float) -> void:
 	bounds = new_bounds
-	material_override.set_shader_parameter("voronoi_scale", bounds * (1.0/3.0))
 	
 	var larger_bounds := bounds + bounds * (1.0/3.0)
 	custom_aabb = AABB(Vector3(-larger_bounds/2.0, -larger_bounds/2.0 ,-larger_bounds/2.0), Vector3(larger_bounds, larger_bounds, larger_bounds))
@@ -53,3 +52,4 @@ func regenerate_points() -> void:
 
 func hide_mm() -> void:
 	visible = false
+	
