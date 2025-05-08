@@ -108,7 +108,6 @@ environment = SubResource("Environment_0xm2m")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamSynchronized_272bh")
 volume_db = -10.0
-autoplay = true
 
 [node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_5vw27")

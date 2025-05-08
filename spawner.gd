@@ -1,6 +1,6 @@
 extends Node3D
 
-var chunk_asset := preload("res://Orbs/orb.tscn")
+@export var chunk_asset = preload("res://Orbs/orb.tscn")
 
 @export var chunk_size : float
 @export var chunks_around : int
@@ -15,6 +15,8 @@ var player_pos : Vector3
 
 var asset_pool : Array[Node3D]
 var asset_pool_index : int = 0
+
+var hyperspace_enabled : bool = false
 
 func _ready() -> void:
 	player_ref = $Freecam3D
@@ -97,8 +99,12 @@ var thread_create : Thread
 func _physics_process(_delta: float) -> void:
 	player_pos = player_ref.global_position
 	
-	spawn_mesh.surface_get_material(0).set_shader_parameter("warp_stretch", pow(player_ref.velocity.length() / player_ref.MAX_SPEED, 5.0) * 0.25)
-	spawn_mesh.surface_get_material(0).set_shader_parameter("velocity_dir", player_ref.velocity.normalized())
+	if hyperspace_enabled:
+		spawn_mesh.surface_get_material(0).set_shader_parameter("warp_stretch", pow(player_ref.velocity.length() / player_ref.target_speed, 5.0) * 0.25)
+		spawn_mesh.surface_get_material(0).set_shader_parameter("velocity_dir", player_ref.velocity.normalized())
+	else:
+		spawn_mesh.surface_get_material(0).set_shader_parameter("warp_stretch", 0.0)
+		spawn_mesh.surface_get_material(0).set_shader_parameter("velocity_dir", Vector3(0.0, 0.0, 0.0))
 	
 	if tick_count % frame_interval_destroy == 0:
 		if thread_destroy:
@@ -113,3 +119,12 @@ func _physics_process(_delta: float) -> void:
 		thread_create.start(_add_chunks)
 
 	tick_count += 1
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("hyperspace"):
+		hyperspace_enabled = !hyperspace_enabled
+		if hyperspace_enabled:
+			player_ref.target_speed = 30.0
+		else:
+			player_ref.velocity /= 2.0
+			player_ref.target_speed = 10.0

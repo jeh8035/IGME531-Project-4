@@ -29,6 +29,7 @@ var audio_stream_action : AudioStreamRandomizer
 var audio_player_bright : AudioStreamPlayer
 
 const MAX_SPEED := 20
+const MAX_SPEED_HYPERSPACE := 40
 const MIN_SPEED := 0.1
 const ACCELERATION := 0.5
 const MOUSE_SENSITIVITY := 0.002
@@ -41,7 +42,7 @@ var movement_active := false:
 		display_message("[Movement ON]" if movement_active else "[Movement OFF]")
 
 ## The current maximum speed. Lower or higher it by scrolling the mouse wheel.
-@export var target_speed := 20
+@export var target_speed := 20.0
 ## Movement velocity.
 var velocity := Vector3.ZERO
 
@@ -68,12 +69,12 @@ func _setup_nodes() -> void:
 
 
 func _ready() -> void:
+	$"../AudioStreamPlayer".play()
 	audio_stream_meta = $"../AudioStreamPlayer".stream
 	audio_stream_calm = audio_stream_meta.get_sync_stream(0) 
 	audio_stream_action = audio_stream_meta.get_sync_stream(1)
 	audio_player_bright = $"../AudioStreamPlayer2"
 	_setup_nodes.call_deferred()
-	_add_keybindings()
 	movement_active = true
 
 
@@ -81,17 +82,17 @@ var rand_timer : float = 15
 
 func _process(delta: float) -> void:
 	
-	if Input.is_action_just_released("__debug_camera_toggle"):
+	if Input.is_action_just_released("toggle"):
 		movement_active = not movement_active
 	
 	if movement_active:
 		var dir = Vector3.ZERO
-		if Input.is_action_pressed("__debug_camera_forward"): 	dir.z -= 1
-		if Input.is_action_pressed("__debug_camera_back"): 		dir.z += 1
-		if Input.is_action_pressed("__debug_camera_left"): 		dir.x -= 1
-		if Input.is_action_pressed("__debug_camera_right"): 	dir.x += 1
-		if Input.is_action_pressed("__debug_camera_up"): 		dir.y += 1
-		if Input.is_action_pressed("__debug_camera_down"): 		dir.y -= 1
+		if Input.is_action_pressed("forward"):	dir.z -= 1
+		if Input.is_action_pressed("backward"):		dir.z += 1
+		if Input.is_action_pressed("left"):		dir.x -= 1
+		if Input.is_action_pressed("right"):	dir.x += 1
+		if Input.is_action_pressed("up"):		dir.y += 1
+		if Input.is_action_pressed("down"):		dir.y -= 1
 		
 		dir = dir.normalized()
 		dir = dir.x * pivot.global_basis.x + dir.y * pivot.global_basis.y + dir.z * pivot.global_basis.z  
@@ -99,6 +100,7 @@ func _process(delta: float) -> void:
 		velocity = lerp(velocity, dir * target_speed, 1 - exp(-ACCELERATION * delta))
 		pivot.position += velocity
 		
+		# Randomize next audio clip (Workaround for https://github.com/godotengine/godot/issues/105929)
 		audio_stream_calm.set_clip_auto_advance_next_clip(0, [1, 2, 3, 4, 5].pick_random())
 		audio_stream_calm.set_clip_auto_advance_next_clip(1, [0, 2, 3, 4, 5].pick_random())
 		audio_stream_calm.set_clip_auto_advance_next_clip(2, [0, 1, 3, 4, 5].pick_random())
@@ -166,17 +168,6 @@ func _make_label(text: String) -> Label:
 	var l = Label.new()
 	l.text = text
 	return l
-
-
-func _add_keybindings() -> void:
-	var actions = InputMap.get_actions()
-	if "__debug_camera_forward" not in actions: _add_key_input_action("__debug_camera_forward", KEY_W)
-	if "__debug_camera_back" 	not in actions: _add_key_input_action("__debug_camera_back", KEY_S)
-	if "__debug_camera_left" 	not in actions: _add_key_input_action("__debug_camera_left", KEY_A)
-	if "__debug_camera_right" 	not in actions: _add_key_input_action("__debug_camera_right", KEY_D)
-	if "__debug_camera_up" 		not in actions: _add_key_input_action("__debug_camera_up", KEY_SPACE)
-	if "__debug_camera_down" 	not in actions: _add_key_input_action("__debug_camera_down", KEY_SHIFT)
-	if "__debug_camera_toggle" 	not in actions: _add_key_input_action("__debug_camera_toggle", toggle_key)
 
 
 func _add_key_input_action(name: String, key: Key) -> void:
