@@ -98,6 +98,7 @@ func _physics_process(_delta: float) -> void:
 	player_pos = player_ref.global_position
 	
 	spawn_mesh.surface_get_material(0).set_shader_parameter("warp_stretch", pow(player_ref.velocity.length() / player_ref.MAX_SPEED, 5.0) * 0.25)
+	spawn_mesh.surface_get_material(0).set_shader_parameter("velocity_dir", player_ref.velocity.normalized())
 	
 	if tick_count % frame_interval_destroy == 0:
 		if thread_destroy:

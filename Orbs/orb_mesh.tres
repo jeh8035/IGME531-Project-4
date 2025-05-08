@@ -16,7 +16,8 @@ shader = ExtResource("1_oqaic")
 shader_parameter/gradient = SubResource("GradientTexture1D_n7n60")
 shader_parameter/voronoi_affect = 1.0
 shader_parameter/voronoi_scale = 2000.0
-shader_parameter/warp_stretch = 0.05
+shader_parameter/velocity_dir = Vector3(0, 0, 0)
+shader_parameter/warp_stretch = 50.0
 
 [resource]
 material = SubResource("ShaderMaterial_n7n60")
