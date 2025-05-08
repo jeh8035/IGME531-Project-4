@@ -75,7 +75,7 @@ func _ready() -> void:
 	audio_stream_action = audio_stream_meta.get_sync_stream(1)
 	audio_player_bright = $"../AudioStreamPlayer2"
 	_setup_nodes.call_deferred()
-	movement_active = true
+	movement_active = false
 
 
 var rand_timer : float = 15

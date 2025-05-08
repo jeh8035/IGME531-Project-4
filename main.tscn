@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cuvpclfcxr31r"]
+[gd_scene load_steps=23 format=3 uid="uid://cuvpclfcxr31r"]
 
 [ext_resource type="Script" uid="uid://2f3xvg1bt20h" path="res://spawner.gd" id="1_h2yge"]
 [ext_resource type="Script" uid="uid://dy1dnxh8hs5aq" path="res://addons/freecam_3D/freecam.gd" id="1_ig7tw"]
@@ -90,6 +90,28 @@ stream_2/stream = ExtResource("10_w48qg")
 stream_3/stream = ExtResource("11_vivmo")
 stream_4/stream = ExtResource("12_2cqfq")
 
+[sub_resource type="GDScript" id="GDScript_vivmo"]
+script/source = "extends Control
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed(\"toggle\"):
+		var tween : Tween = create_tween()
+		tween.tween_property(self, \"modulate\", Color(1.0, 1.0, 1.0, 0.0), 1.0)
+		tween.tween_callback(queue_free)
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vivmo"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.601223, 0.601223, 0.601223, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_h2yge")
 chunk_size = 2000.0
@@ -112,3 +134,39 @@ volume_db = -10.0
 [node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_5vw27")
 volume_db = -10.0
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = SubResource("GDScript_vivmo")
+
+[node name="PanelContainer" type="PanelContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = -30.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vivmo")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Control/PanelContainer"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "WASD - Move
+Space - Toggle warp speed
+Tab - Toggle mouse controls
+
+Press tab to begin"
+horizontal_alignment = 1
+vertical_alignment = 1
