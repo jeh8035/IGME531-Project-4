@@ -125,7 +125,7 @@ void vertex() {
 	mat4 modified_rot = calcLookAtMatrix(new_translation.xyz, CAMERA_POSITION_WORLD, velocity_dir.xyz * warp_stretch * 10000.0);
 
 	// Distance to line of velocity
-	float dist_from_vel = length(cross(new_translation.xyz - CAMERA_POSITION_WORLD, new_translation.xyz - (CAMERA_POSITION_WORLD + velocity_dir.xyz ))) / length(-velocity_dir.xyz);
+	float dist_from_vel = length(cross(new_translation.xyz - CAMERA_POSITION_WORLD, new_translation.xyz - (CAMERA_POSITION_WORLD + velocity_dir.xyz ))) / max(1.0, length(-velocity_dir.xyz));
 
 	mat4 modified_scale = mat4(
 		vec4(1.0, 0.0, 0.0, 0.0),
