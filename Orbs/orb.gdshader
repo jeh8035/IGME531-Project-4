@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode cull_disabled;
+render_mode cull_disabled, blend_add;
 
 
 uniform sampler2D gradient;
@@ -83,10 +83,10 @@ mat4 calcLookAtMatrix(vec3 origin, vec3 target_start, vec3 target_vector) {
 
 	// Forward
 	vec3 ww = normalize((target_start + target_vector) - origin);
-	
+
 	// Forward x Right = Up
 	vec3 uu = normalize(cross(ww, rr));
-	
+
 	// Up x Forward = Right
 	vec3 vv = normalize(cross(uu, ww));
 
@@ -120,17 +120,25 @@ void vertex() {
     );
 
 	// "Hyperspace" effect
-	
+
+	bool is_significant_speed = length(velocity_dir) > 1.0;
+
 	// Face player for billboard effect, plus velocity for hyperspace effect
-	mat4 modified_rot = calcLookAtMatrix(new_translation.xyz, CAMERA_POSITION_WORLD, velocity_dir.xyz * warp_stretch * 10000.0);
+	mat4 modified_rot = calcLookAtMatrix(new_translation.xyz, CAMERA_POSITION_WORLD + vec3(0.0, 0.0, 5.0), vec3(0.0, 0.0, -5.0));
+	// If going above a certain speed, face point going towards the direction of velocity for hyperspace effect
+	if (is_significant_speed)
+		modified_rot = calcLookAtMatrix(new_translation.xyz, CAMERA_POSITION_WORLD, normalize(velocity_dir.xyz) * warp_stretch * 10000.0);
 
 	// Distance to line of velocity
-	float dist_from_vel = length(cross(new_translation.xyz - CAMERA_POSITION_WORLD, new_translation.xyz - (CAMERA_POSITION_WORLD + velocity_dir.xyz ))) / max(1.0, length(-velocity_dir.xyz));
+	// Only calculate if going above a certain speed to avoid jittering
+	float dist_from_vel = 0.0;
+	if (is_significant_speed)
+		dist_from_vel = length(cross(new_translation.xyz - CAMERA_POSITION_WORLD, new_translation.xyz - (CAMERA_POSITION_WORLD + normalize(velocity_dir.xyz) )));
 
 	mat4 modified_scale = mat4(
-		vec4(1.0, 0.0, 0.0, 0.0),
-		vec4(0.0, 1.0 + warp_stretch * dist_from_vel, 0.0, 0.0),
-		vec4(0.0, 0.0, 1.0, 0.0),
+		vec4(5.0, 0.0, 0.0, 0.0),
+		vec4(0.0, 5.0 + warp_stretch * dist_from_vel, 0.0, 0.0),
+		vec4(0.0, 0.0, 5.0, 0.0),
 		vec4(0.0, 0.0, 0.0, 1.0)
 	);
 
@@ -143,8 +151,8 @@ void fragment() {
 	EMISSION = color.xyz * ((rand_val2 + 0.5) * 2.0);
 	ALBEDO = color.xyz;
 
-	ALPHA_SCISSOR_THRESHOLD = 0.5;
-	ALPHA = float(length(UV - vec2(0.5)) < 0.5);
+	//ALPHA_SCISSOR_THRESHOLD = 0.5;
+	ALPHA = min(1.0, pow(1.0 - length(UV - vec2(0.5)), 5.0));
 
 	//EMISSION = MODEL_MATRIX[3].xyz;
 }

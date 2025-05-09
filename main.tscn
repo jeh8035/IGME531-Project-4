@@ -19,14 +19,16 @@
 [sub_resource type="Environment" id="Environment_0xm2m"]
 background_mode = 1
 ambient_light_energy = 0.0
-glow_enabled = true
 glow_levels/1 = 2.07
 glow_levels/3 = 0.0
 glow_levels/5 = 0.0
-glow_intensity = 0.38
+glow_intensity = 8.0
 glow_strength = 0.63
 glow_bloom = 1.0
 glow_blend_mode = 0
+glow_hdr_threshold = 0.0
+glow_hdr_scale = 4.0
+glow_hdr_luminance_cap = 57.64
 glow_map_strength = 1.0
 fog_enabled = true
 fog_mode = 1
@@ -35,6 +37,8 @@ fog_density = 1.0
 fog_sky_affect = 0.0
 fog_depth_curve = 0.406125
 fog_depth_end = 4000.0
+adjustment_enabled = true
+adjustment_brightness = 2.83
 
 [sub_resource type="AudioStreamInteractive" id="AudioStreamInteractive_4c57u"]
 clip_count = 6

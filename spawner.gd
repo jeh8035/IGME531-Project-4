@@ -101,7 +101,7 @@ func _physics_process(_delta: float) -> void:
 	
 	if hyperspace_enabled:
 		spawn_mesh.surface_get_material(0).set_shader_parameter("warp_stretch", pow(player_ref.velocity.length() / player_ref.target_speed, 5.0) * 0.25)
-		spawn_mesh.surface_get_material(0).set_shader_parameter("velocity_dir", player_ref.velocity.normalized())
+		spawn_mesh.surface_get_material(0).set_shader_parameter("velocity_dir", player_ref.velocity)
 	else:
 		spawn_mesh.surface_get_material(0).set_shader_parameter("warp_stretch", 0.0)
 		spawn_mesh.surface_get_material(0).set_shader_parameter("velocity_dir", Vector3(0.0, 0.0, 0.0))
